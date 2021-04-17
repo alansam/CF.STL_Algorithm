@@ -32,16 +32,16 @@ using namespace std::literals::string_literals;
  *  MARK: in_quote()
  */
 template <typename Container>
-bool in_quote(const Container & cont, const std::string & s) {
-    return std::search(cont.begin(), cont.end(), s.begin(), s.end()) != cont.end();
+bool in_quote(const Container & cont, std::string const & str) {
+    return std::search(cont.begin(), cont.end(), str.begin(), str.end()) != cont.end();
 }
 
 /*
  *  MARK: consecutive_values()
  */
 template <class Container, class Size, class T>
-bool consecutive_values(const Container & c, Size count, const T & v) {
-  return std::search_n(std::begin(c), std::end(c), count,v) != std::end(c);
+bool consecutive_values(Container const & ctnr, Size count, T const & val) {
+  return std::search_n(std::begin(ctnr), std::end(ctnr), count,val) != std::end(ctnr);
 }
 
 /*
@@ -49,8 +49,8 @@ bool consecutive_values(const Container & c, Size count, const T & v) {
  */
 template<class ForwardIt>
 void selection_sort(ForwardIt begin, ForwardIt end) {
-  for (ForwardIt i = begin; i != end; ++i) {
-    std::iter_swap(i, std::min_element(i, end));
+  for (ForwardIt it = begin; it != end; ++it) {
+    std::iter_swap(it, std::min_element(it, end));
   }
 }
 
@@ -90,9 +90,9 @@ void merge_sort(Iter first, Iter last)
  *  MARK: operator <<()
  */
 template<class Os, class Co>
-Os & operator <<(Os & os, const Co & v) {
-  for (auto i : v) {
-    os << i << ' ';
+Os & operator <<(Os & os, Co const & vals) {
+  for (auto i_ : vals) {
+    os << i_ << ' ';
   }
   return os << '\t';
 }
@@ -411,19 +411,19 @@ void fn_non_mod_sequences(void) {
     int n1 = 3;
     int n2 = 5;
 
-    std::vector<int> v { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, };
+    std::vector<int> vec { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, };
 
-    auto result1f = std::find(std::begin(v), std::end(v), n1);
-    auto result2f = std::find(std::begin(v), std::end(v), n2);
+    auto result1f = std::find(std::begin(vec), std::end(vec), n1);
+    auto result2f = std::find(std::begin(vec), std::end(vec), n2);
 
-    if (result1f != std::end(v)) {
+    if (result1f != std::end(vec)) {
       std::cout << "v contains: "s << n1 << '\n';
     }
     else {
       std::cout << "v does not contain: "s << n1 << '\n';
     }
 
-    if (result2f != std::end(v)) {
+    if (result2f != std::end(vec)) {
       std::cout << "v contains: "s << n2 << '\n';
     }
     else {
@@ -433,14 +433,14 @@ void fn_non_mod_sequences(void) {
     auto is_odd = [](int i_) { return (i_ % 2) != 0; };
     auto is_even = [](int i_) { return (i_ % 2) == 0; };
 
-    auto result1if = std::find_if(std::begin(v), std::end(v), is_odd);
+    auto result1if = std::find_if(std::begin(vec), std::end(vec), is_odd);
     std::cout << "The first odd value is "s << *result1if << '\n';
-    auto result2if = std::find_if(std::begin(v), std::end(v), is_even);
+    auto result2if = std::find_if(std::begin(vec), std::end(vec), is_even);
     std::cout << "The first even value is "s << *result2if << '\n';
 
-    auto result1nif = std::find_if_not(std::rbegin(v), std::rend(v), is_even);
+    auto result1nif = std::find_if_not(std::rbegin(vec), std::rend(vec), is_even);
     std::cout << "The last odd value is "s << *result1nif << '\n';
-    auto result2nif = std::find_if_not(std::rbegin(v), std::rend(v), is_odd);
+    auto result2nif = std::find_if_not(std::rbegin(vec), std::rend(vec), is_odd);
     std::cout << "The last even value is "s << *result2nif << '\n';
 
     //  see also samples in std::for_each, std::all_of for other ways
@@ -500,29 +500,29 @@ void fn_non_mod_sequences(void) {
     << "std::find_end"s << '\n'
     << std::endl;
   {
-    std::vector<int> v { 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, };
+    std::vector<int> vec { 1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, };
     std::vector<int>::iterator result;
 
     std::vector<int> t1 { 1, 2, 3, };
 
-    result = std::find_end(v.begin(), v.end(), t1.begin(), t1.end());
-    if (result == v.end()) {
+    result = std::find_end(vec.begin(), vec.end(), t1.begin(), t1.end());
+    if (result == vec.end()) {
       std::cout << "sequence not found\n"s;
     }
     else {
       std::cout << "last occurrence is at: "s
-                << std::distance(v.begin(), result)
+                << std::distance(vec.begin(), result)
                 << "\n"s;
     }
 
     std::vector<int> t2{ 4, 5, 6, };
-    result = std::find_end(v.begin(), v.end(), t2.begin(), t2.end());
-    if (result == v.end()) {
+    result = std::find_end(vec.begin(), vec.end(), t2.begin(), t2.end());
+    if (result == vec.end()) {
       std::cout << "sequence not found\n"s;
     }
     else {
       std::cout << "last occurrence is at: "s
-                << std::distance(v.begin(), result)
+                << std::distance(vec.begin(), result)
                 << "\n"s;
     }
   }
@@ -540,17 +540,17 @@ void fn_non_mod_sequences(void) {
     << "std::find_first_of"s << '\n'
     << std::endl;
   {
-    std::vector<int> v { 0, 2, 3, 25, 5, };
-    std::vector<int> t { 3, 19, 10, 2, };
+    std::vector<int> vec { 0, 2, 3, 25, 5, };
+    std::vector<int> tst { 3, 19, 10, 2, };
 
-    auto result = std::find_first_of(v.begin(), v.end(), t.begin(), t.end());
+    auto result = std::find_first_of(vec.begin(), vec.end(), tst.begin(), tst.end());
 
-    if (result == v.end()) {
+    if (result == vec.end()) {
       std::cout << "no elements of v were equal to 3, 19, 10 or 2\n"s;
     }
     else {
       std::cout << "found a match at "s
-                << std::distance(v.begin(), result) << "\n"s;
+                << std::distance(vec.begin(), result) << "\n"s;
     }
   }
   std::cout << std::endl;
@@ -800,8 +800,8 @@ void fn_mod_sequences(void) {
     << std::endl;
   {
     std::vector<int> from_vector;
-    for (int i = 0; i < 10; i++) {
-      from_vector.push_back(i);
+    for (int i_ = 0; i_ < 10; i_++) {
+      from_vector.push_back(i_);
     }
 
     std::vector<int> to_vector(15);
@@ -814,8 +814,8 @@ void fn_mod_sequences(void) {
     std::copy_backward(from_vector.begin(), from_vector.end(), to_vector.end());
 
     std::cout << "to_vector contains: "s;
-    for (auto i : to_vector) {
-      std::cout << i << " "s;
+    for (auto i_ : to_vector) {
+      std::cout << i_ << " "s;
     }
     std::cout << '\n';
   }
@@ -867,26 +867,26 @@ void fn_mod_sequences(void) {
     std::vector<std::string> dest(src.size());
 
     std::cout << "src: "s;
-    for (const auto & s : src) {
-      std::cout << s << ' ';
+    for (const auto & s_ : src) {
+      std::cout << s_ << ' ';
     }
 
     std::cout << "\ndest: "s;
-    for (const auto & s : dest) {
-      std::cout << s << ' ';
+    for (const auto & s_ : dest) {
+      std::cout << s_ << ' ';
     }
     std::cout << '\n';
 
     std::move_backward(src.begin(), src.end(), dest.end());
 
     std::cout << "src: "s;
-    for (const auto & s : src) {
-      std::cout << s << ' ';
+    for (const auto & s_ : src) {
+      std::cout << s_ << ' ';
     }
 
     std::cout << "\ndest: "s;
-    for (const auto & s : dest) {
-      std::cout << s << ' ';
+    for (const auto & s_ : dest) {
+      std::cout << s_ << ' ';
     }
     std::cout << '\n';
   }
@@ -904,11 +904,11 @@ void fn_mod_sequences(void) {
     << "std::fill"s << '\n'
     << std::endl;
   {
-    std::vector<int> v { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, };
+    std::vector<int> vec { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, };
 
-    std::fill(v.begin(), v.end(), -1);
+    std::fill(vec.begin(), vec.end(), -1);
 
-    for (auto elem : v) {
+    for (auto elem : vec) {
       std::cout << elem << " "s;
     }
     std::cout << "\n"s;
@@ -987,21 +987,21 @@ void fn_mod_sequences(void) {
   {
     int f_gen(void);
 
-    std::vector<int> v(5);
-      std::generate(v.begin(), v.end(), f_gen);
+    std::vector<int> vec(5);
+      std::generate(vec.begin(), vec.end(), f_gen);
 
     std::cout << "v: "s;
-    for (auto iv : v) {
+    for (auto iv : vec) {
       std::cout << iv << " "s;
     }
     std::cout << "\n"s;
 
     // Initialize with default values 0,1,2,3,4 from a lambda function
     // Equivalent to std::iota(v.begin(), v.end(), 0);
-    std::generate(v.begin(), v.end(), [n = 0] () mutable { return n++; });
+    std::generate(vec.begin(), vec.end(), [nr = 0] () mutable { return nr++; });
 
     std::cout << "v: "s;
-    for (auto iv : v) {
+    for (auto iv : vec) {
       std::cout << iv << " "s;
     }
     std::cout << "\n"s;
@@ -1133,8 +1133,8 @@ void fn_mod_sequences(void) {
     << "std::replace_copy, std::replace_copy_if"s << '\n'
     << std::endl;
   {
-    std::vector<int> v { 5, 7, 4, 2, 8, 6, 1, 9, 0, 3, };
-    std::replace_copy_if(v.begin(), v.end(),
+    std::vector<int> vec { 5, 7, 4, 2, 8, 6, 1, 9, 0, 3, };
+    std::replace_copy_if(vec.begin(), vec.end(),
                          std::ostream_iterator<int>(std::cout, " "),
                          [](int n){ return n > 5; }, 99);
     std::cout << '\n';
@@ -1153,15 +1153,15 @@ void fn_mod_sequences(void) {
   {
     //  --------------------------------------------------------------------------------
     std::cout << "primitives\n"s;
-    int a = 5, b = 3;
+    int a_val = 5, b_val = 3;
 
     // before
-    std::cout << a << ' ' << b << '\n';
+    std::cout << a_val << ' ' << b_val << '\n';
 
-    std::swap(a, b);
+    std::swap(a_val, b_val);
 
     // after
-    std::cout << a << ' ' << b << '\n';
+    std::cout << a_val << ' ' << b_val << '\n';
     
     auto print_int = [](int i_) { std::cout << i_ << ' '; };
     auto print_str = [](std::string i_) { std::cout << i_ << ' '; };
@@ -1308,14 +1308,14 @@ void fn_mod_sequences(void) {
       std::cout << "    "s;
     };
 
-    std::vector<int> v({ 1, 2, 3, });
-    print(v);
+    std::vector<int> vec({ 1, 2, 3, });
+    print(vec);
 
     std::vector<int> destination(3);
-    std::reverse_copy(std::begin(v), std::end(v), std::begin(destination));
+    std::reverse_copy(std::begin(vec), std::end(vec), std::begin(destination));
     print(destination);
 
-    std::reverse_copy(std::rbegin(v), std::rend(v), std::begin(destination));
+    std::reverse_copy(std::rbegin(vec), std::rend(vec), std::begin(destination));
     print(destination);
 
     std::cout << '\n';
@@ -1413,15 +1413,15 @@ void fn_mod_sequences(void) {
     << "std::shift_left, std::shift_right"s << '\n'
     << std::endl;
   {
-    struct S {
+    struct Sstr {
       int value { 0 };
       bool specified_state { true };
    
-      S(int v = 0) : value{v} {}
-      S(S const & rhs) = default;
-      S(S && rhs) { *this = std::move(rhs); }
-      S & operator =(S const & rhs) = default;
-      S & operator =(S && rhs) {
+      Sstr(int val = 0) : value{val} {}
+      Sstr(Sstr const & rhs) = default;
+      Sstr(Sstr && rhs) { *this = std::move(rhs); }
+      Sstr & operator =(Sstr const & rhs) = default;
+      Sstr & operator =(Sstr && rhs) {
         if (this != &rhs) {
           value = rhs.value;
           specified_state = rhs.specified_state;
@@ -1433,14 +1433,14 @@ void fn_mod_sequences(void) {
 
     std::ostream & operator <<(std::ostream & os, std::vector<S> const & v);
 
-    std::vector<S> v {1, 2, 3, 4, 5, 6, 7, };
-    std::cout << v;
+    std::vector<Sstr> vec { 1, 2, 3, 4, 5, 6, 7, };
+    std::cout << vec;
 
-    std::shift_left(v.begin(), v.end(), 3);
-    std::cout << v;
+    std::shift_left(vec.begin(), vec.end(), 3);
+    std::cout << vec;
 
-    std::shift_right(v.begin(), v.end(), 2);
-    std::cout << v;
+    std::shift_right(vec.begin(), vec.end(), 2);
+    std::cout << vec;
   }
   std::cout << std::endl;
 #endif
@@ -1510,24 +1510,24 @@ void fn_mod_sequences(void) {
     << std::endl;
   {
     // a vector containing several duplicate elements
-    std::vector<int> v { 1, 2, 1, 1, 3, 3, 3, 4, 5, 4, };
+    std::vector<int> vec { 1, 2, 1, 1, 3, 3, 3, 4, 5, 4, };
  
     // remove consecutive (adjacent) duplicates
-    auto last = std::unique(v.begin(), v.end());
+    auto last = std::unique(vec.begin(), vec.end());
     // v now holds {1 2 1 3 4 5 4 x x x}, where 'x' is indeterminate
-    v.erase(last, v.end());
-    for (int i : v) {
-      std::cout << std::setw(4) << i;
+    vec.erase(last, vec.end());
+    for (int i_ : vec) {
+      std::cout << std::setw(4) << i_;
     }
     std::cout << '\n';
 
     // sort followed by unique, to remove all duplicates
-    std::sort(v.begin(), v.end()); // {1 1 2 3 4 4 5}
-    last = std::unique(v.begin(), v.end());
+    std::sort(vec.begin(), vec.end()); // {1 1 2 3 4 4 5}
+    last = std::unique(vec.begin(), vec.end());
     // v now holds {1 2 3 4 5 x x}, where 'x' is indeterminate
-    v.erase(last, v.end());
-    for (int i : v) {
-      std::cout << std::setw(4) << i;
+    vec.erase(last, vec.end());
+    for (int i_ : vec) {
+      std::cout << std::setw(4) << i_;
     }
     std::cout << "\n";
   }
@@ -1575,9 +1575,9 @@ std::ostream & operator <<(std::ostream & os, std::vector<S> const & v) {
  *  MARK: f_sleep()
  */
 inline
-void f_sleep(int n) {
-    std::this_thread::sleep_for(std::chrono::seconds(n));
-    std::cout << "thread " << n << " ended" << '\n';
+void f_sleep(int nr) {
+    std::this_thread::sleep_for(std::chrono::seconds(nr));
+    std::cout << "thread " << nr << " ended" << '\n';
 }
 
 /*
@@ -1585,8 +1585,8 @@ void f_sleep(int n) {
  */
 inline
 int f_gen(void) {
-  static int i = 1;
-  return i++;
+  static int i_ = 1;
+  return i_++;
 }
 
 //  MARK: - Partitioning operations
@@ -1618,7 +1618,7 @@ void fn_partitioning(void) {
   {
     std::array<int, 9> ap = { 1, 2, 3, 4, 5, 6, 7, 8, 9, };
 
-    auto is_even = [](int i) { return i % 2 == 0; };
+    auto is_even = [](int i_) { return i_ % 2 == 0; };
     std::cout.setf(std::ios_base::boolalpha);
     std::cout << std::is_partitioned(ap.begin(), ap.end(), is_even) << ' ';
 
@@ -1723,14 +1723,14 @@ void fn_partitioning(void) {
                         [] (int i) { return i > 5; });
 
     std::cout << " true_arr: "s;
-    for (int x : true_arr) {
-      std::cout << std::setw(4) << x;
+    for (int x_ : true_arr) {
+      std::cout << std::setw(4) << x_;
     }
     std::cout << '\n';
 
     std::cout << "false_arr: "s;
-    for (int x : false_arr) {
-      std::cout << std::setw(4) << x;
+    for (int x_ : false_arr) {
+      std::cout << std::setw(4) << x_;
     }
     std::cout << '\n';
   }
@@ -1853,18 +1853,18 @@ void fn_sorting(void) {
     << std::endl;
   {
     std::random_device rd;
-    std::mt19937 g(rd());
-    const int N = 6;
-    int nums[N] = { 3, 1, 4, 1, 5, 9, };
+    std::mt19937 rng(rd());
+    const int NR = 6;
+    int nums[NR] = { 3, 1, 4, 1, 5, 9, };
  
     const int min_sorted_size = 4;
     long sorted_size = 0;
     do {
-      std::shuffle(nums, nums + N, g);
-      int * sorted_end = std::is_sorted_until(nums, nums + N);
+      std::shuffle(nums, nums + NR, rng);
+      int * sorted_end = std::is_sorted_until(nums, nums + NR);
       sorted_size = std::distance(nums, sorted_end);
 
-      for (auto i : nums) std::cout << std::setw(3) << i;
+      for (auto i_ : nums) std::cout << std::setw(3) << i_;
       std::cout << " : " << sorted_size << " initial sorted elements\n"s;
     } while (sorted_size < min_sorted_size);
   }
@@ -2180,11 +2180,11 @@ std::cout
   {
     std::vector<int> data = { 1, 2, 4, 5, 5, 6, };
 
-    for (int i = 0; i < 7; ++i) {
+    for (int i_ = 0; i_ < 7; ++i_) {
       // Search first element that is greater than i
-      auto upper = std::upper_bound(data.begin(), data.end(), i);
+      auto upper = std::upper_bound(data.begin(), data.end(), i_);
 
-      std::cout << i << " < "s;
+      std::cout << i_ << " < "s;
       if (upper != data.end()) {
         std::cout << *upper << " at index "s << std::distance(data.begin(), upper);
       }
@@ -2278,37 +2278,37 @@ std::cout
     << "std::equal_range"s << '\n'
     << std::endl;
   {
-    struct S {
+    struct Sstr {
       int number;
       char name;
       // note: name is ignored by this comparison operator
-      bool operator< (S const & s) const { return number < s.number; }
+      bool operator< (Sstr const & str) const { return number < str.number; }
     };
 
     // note: not ordered, only partitioned w.r.t. S defined below
-    std::vector<S> vec = {
+    std::vector<Sstr> vec = {
       { 1, 'A', }, { 2, 'B', }, { 2, 'C', }, { 2, 'D', }, { 4, 'G', }, { 3, 'F', }
     };
 
-    S value = { 2, '?', };
+    Sstr value = { 2, '?', };
 
-    auto p = std::equal_range(vec.begin(), vec.end(), value);
+    auto pv = std::equal_range(vec.begin(), vec.end(), value);
 
-    for (auto i = p.first; i != p.second; ++i) {
-      std::cout << i->name << ' ';
+    for (auto i_ = pv.first; i_ != pv.second; ++i_) {
+      std::cout << i_->name << ' ';
     }
     std::cout << '\n';
 
     // heterogeneous comparison:
     struct Comp {
-      bool operator() ( const S& s, int i ) const { return s.number < i; }
-      bool operator() ( int i, const S& s ) const { return i < s.number; }
+      bool operator() ( const Sstr & str, int i_ ) const { return str.number < i_; }
+      bool operator() ( int i_, const Sstr & str ) const { return i_ < str.number; }
     };
 
     auto p2 = std::equal_range(vec.begin(),vec.end(), 2, Comp{});
 
-    for (auto i = p2.first; i != p2.second; ++i) {
-      std::cout << i->name << ' ';
+    for (auto i_ = p2.first; i_ != p2.second; ++i_) {
+      std::cout << i_->name << ' ';
     }
   }
   std::cout << std::endl;
@@ -2451,7 +2451,7 @@ std::cout
       v6 = { 'a', 'c', 'g', },
       v7 = { 'A', 'B', 'C', };
 
-    auto no_case = [](char a, char b) { return std::tolower(a) < std::tolower(b); };
+    auto no_case = [](char a_, char b_) { return std::tolower(a_) < std::tolower(b_); };
 
     std::cout
       << v1 << "\nincludes:\n"s << std::boolalpha
@@ -2487,16 +2487,16 @@ std::cout
     std::set_difference(v1.begin(), v1.end(), v2.begin(), v2.end(),
                         std::inserter(diff, diff.begin()));
 
-    for (auto i : v1) {
-      std::cout << i << ' ';
+    for (auto i_ : v1) {
+      std::cout << i_ << ' ';
     }
     std::cout << "minus ";
-    for (auto i : v2) {
-      std::cout << i << ' ';
+    for (auto i_ : v2) {
+      std::cout << i_ << ' ';
     }
     std::cout << "is: ";
-    for (auto i : diff) {
-      std::cout << i << ' ';
+    for (auto i_ : diff) {
+      std::cout << i_ << ' ';
     }
     std::cout << '\n';
   }
@@ -2527,8 +2527,8 @@ std::cout
       std::set_intersection(v1.begin(), v1.end(),
                             v2.begin(), v2.end(),
                             std::back_inserter(v_intersection));
-    for (int n : v_intersection) {
-      std::cout << n << ' ';
+    for (int nr : v_intersection) {
+      std::cout << nr << ' ';
     }
   }
   std::cout << std::endl;
@@ -2561,8 +2561,8 @@ std::cout
         v2.begin(), v2.end(),
         std::back_inserter(v_symDifference));
 
-    for (int n : v_symDifference) {
-      std::cout << n << ' ';
+    for (int nr : v_symDifference) {
+      std::cout << nr << ' ';
     }
   }
   std::cout << std::endl;
@@ -2592,8 +2592,8 @@ std::cout
                      v2.begin(), v2.end(),
                      std::back_inserter(dest1));
 
-      for (const auto & i : dest1) {
-        std::cout << i << ' ';
+      for (const auto & i_ : dest1) {
+        std::cout << i_ << ' ';
       }
       std::cout << '\n';
     }
@@ -2606,8 +2606,8 @@ std::cout
                      v2.begin(), v2.end(),
                      std::back_inserter(dest1));
 
-      for (const auto & i : dest1) {
-        std::cout << i << ' ';
+      for (const auto & i_ : dest1) {
+        std::cout << i_ << ' ';
       }
       std::cout << '\n';
     }
@@ -2647,8 +2647,8 @@ std::cout
     std::vector<int> vh { 3, 1, 4, 1, 5, 9, };
 
     std::cout << "initially, vh: "s;
-    for (auto i : vh) {
-      std::cout << std::setw(3) << i;
+    for (auto i_ : vh) {
+      std::cout << std::setw(3) << i_;
     }
     std::cout << '\n';
 
@@ -2658,8 +2658,8 @@ std::cout
     }
 
     std::cout << "after make_heap, vh: "s;
-    for (auto i : vh) {
-      std::cout << std::setw(3) << i;
+    for (auto i_ : vh) {
+      std::cout << std::setw(3) << i_;
     }
     std::cout << '\n';
   }
@@ -2687,14 +2687,14 @@ std::cout
     auto heap_end = std::is_heap_until(vh.begin(), vh.end());
 
     std::cout << "all of vh: ";
-    for (auto i : vh) {
-      std::cout << std::setw(3) << i;
+    for (auto i_ : vh) {
+      std::cout << std::setw(3) << i_;
     }
     std::cout << '\n';
 
     std::cout << "only heap: ";
-    for (auto i = vh.begin(); i != heap_end; ++i) {
-      std::cout << std::setw(3) << *i;
+    for (auto i_ = vh.begin(); i_ != heap_end; ++i_) {
+      std::cout << std::setw(3) << *i_;
     }
     std::cout << '\n';
   }
@@ -2930,7 +2930,7 @@ std::cout
     << "std::max_element"s << '\n'
     << std::endl;
   {
-    bool abs_compare(int a, int b);
+    bool abs_compare(int a_, int b_);
 
     std::vector<int> vm { 3, 1, -14, 1, 5, 9, };
     std::vector<int>::iterator result;
@@ -3048,14 +3048,14 @@ std::cout
     << "std::clamp"s << '\n'
     << std::endl;
   {
-    std::mt19937 g(std::random_device{}());
-    std::uniform_int_distribution<> d(-300, 300);
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_int_distribution<> ud(-300, 300);
     std::cout << " raw   clamped to int8_t   clamped to uint8_t\n";
-    for(int n = 0; n < 5; ++n) {
-        int v = d(g);
-        std::cout << std::setw(4) << v
-                  << std::setw(20) << std::clamp(v, INT8_MIN, INT8_MAX)
-                  << std::setw(21) << std::clamp(v, 0, UINT8_MAX) << '\n';
+    for(int nr = 0; nr < 5; ++nr) {
+        int val = ud(rng);
+        std::cout << std::setw(4) << val
+                  << std::setw(20) << std::clamp(val, INT8_MIN, INT8_MAX)
+                  << std::setw(21) << std::clamp(val, 0, UINT8_MAX) << '\n';
     }
   }
   std::cout << std::endl;
@@ -3067,8 +3067,8 @@ std::cout
  *  MARK: abs_compare
  */
 inline
-bool abs_compare(int a, int b) {
-  return (std::abs(a) < std::abs(b));
+bool abs_compare(int a_, int b_) {
+  return (std::abs(a_) < std::abs(b_));
 }
 
 //  MARK: - Comparison operations
@@ -3223,11 +3223,11 @@ std::cout
     << "std::next_permutation"s << '\n'
     << std::endl;
   {
-    std::string s = "aba"s;
-    std::sort(s.begin(), s.end());
+    std::string str = "aba"s;
+    std::sort(str.begin(), str.end());
     do {
-      std::cout << s << '\n';
-    } while (std::next_permutation(s.begin(), s.end()));
+      std::cout << str << '\n';
+    } while (std::next_permutation(str.begin(), str.end()));
   }
   std::cout << std::endl;
   
@@ -3245,11 +3245,11 @@ std::cout
     << "std::prev_permutation"s << '\n'
     << std::endl;
   {
-    std::string s = "abc"s;
-    std::sort(s.begin(), s.end(), std::greater<char>());
+    std::string str = "abc"s;
+    std::sort(str.begin(), str.end(), std::greater<char>());
     do {
-      std::cout << s << ' ';
-    } while (std::prev_permutation(s.begin(), s.end()));
+      std::cout << str << ' ';
+    } while (std::prev_permutation(str.begin(), str.end()));
     std::cout << '\n';
   }
   std::cout << std::endl;
